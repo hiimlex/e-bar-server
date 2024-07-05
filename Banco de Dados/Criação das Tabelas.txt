@@ -1,0 +1,48 @@
+-- CREATE DATABASE social_sips
+-- Use social_sips
+
+-- Criar tabela de produtos
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    stock INT NOT NULL,
+    `active` BOOLEAN DEFAULT 1,
+    image_url VARCHAR(400) NOT NULL
+);
+
+-- Criar tabela de garçons
+CREATE TABLE waiters (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    phone VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    `active` BOOLEAN NOT NULL DEFAULT 1,
+    is_admin BOOLEAN NOT NULL DEFAULT 0
+);
+
+-- Criar tabela de mesas
+CREATE TABLE `tables` (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    waiter_id INT,
+    `active` BOOLEAN NOT NULL DEFAULT 1,
+    in_use BOOLEAN NOT NULL DEFAULT 0,
+    FOREIGN KEY (waiter_id) REFERENCES waiters(id)
+);
+
+-- Criar tabela de pedidos
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    waiter_id INT,
+    tabla_id INT,
+    products JSON NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    forma_de_pagamento VARCHAR(255) NOT NULL,
+    situação VARCHAR(255) NOT NULL,
+    finalized_at TIMESTAMP NULL DEFAULT NULL,
+    FOREIGN KEY (garçom_id) REFERENCES waiters(id),
+    FOREIGN KEY (mesa_id) REFERENCES mesas(id)
+);
+
