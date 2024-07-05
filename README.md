@@ -1,3 +1,12 @@
+## Run
+
+flask --app run.py --debug run // Roda o servidor run em tempo real
+
+## Git
+
+git add . // Adiciona todos os arquivos
+git commit -m "Mensagem" // Commita os arquivos
+git push // Envia para o repositório
 
 ### Entidades
 
@@ -8,8 +17,6 @@
 		- Criar ENUM
 	- Estoque
 	- Imagem => Cloudinary url
-	- Criado em => Data
-	- Atualizado em => Data
 - Garçons
 	- Nome
 	- Email
@@ -25,7 +32,6 @@
 		- Id
 - Pedidos
 	- Garçom
-		- Nome 
 		- ID
 	- Mesa
 		- Numero
@@ -71,7 +77,6 @@ Ex.: Produtos =
 	2 Criar garçom
 	3 Editar garçom
 	4 Remover garçom
-	5 Ativar ou desativar garçom
 - Mesas
 	1 Listar mesas
 		- Filtros
@@ -81,7 +86,6 @@ Ex.: Produtos =
 	2 Criar mesa
 	3 Editar mesa
 	4 Remover mesa
-	5 Ativar ou desativar mesa
 - Pedidos 
 	1 Listar pedidos em andamento
 		- Filtros
