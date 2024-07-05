@@ -3,3 +3,6 @@ Flask-MySQLdb
 Flask-SQLAlchemy
 Flask-JWT-Extended
 Flask-SocketIO
+Flask-cors
+pymysql
+python-dotenv

@@ -26,6 +26,12 @@ def get_waiters():
     if 'nome' in filters:
         query = query.filter(Waiters.name.ilike(f"%{filters['nome']}%"))
 
+    if 'is_admin' in filters:
+        query = query.filter(Waiters.is_admin == True)
+
+    if 'ativos' in filters:
+        query = query.filter(Waiters.active == True)
+
     waiters = query.all()
 
     return jsonify([waiter.as_dict() for waiter in waiters])

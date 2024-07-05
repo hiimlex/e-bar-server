@@ -25,7 +25,7 @@ def get_tables():
     return jsonify([table.as_dict() for table in tables])
 
 @bp.route('', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def create_table():
     data = request.get_json()
     new_table = Tables(

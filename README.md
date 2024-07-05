@@ -1,11 +1,16 @@
-## Run
+## Install
 
-flask --app run.py --debug run // Roda o servidor run em tempo real
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+flask --app run.py --debug run --host=0.0.0.0 --port=8080 // Roda o servidor run em tempo real
 
 ## Git
 
 git add . // Adiciona todos os arquivos
+
 git commit -m "Mensagem" // Commita os arquivos
+
 git push // Envia para o repositório
 
 ### Entidades

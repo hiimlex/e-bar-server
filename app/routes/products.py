@@ -12,8 +12,8 @@ def get_products():
     filters = request.args
     query = Products.query
 
-    if 'estoque' in filters:
-        query = query.filter(Products.stock >= filters['estoque'])
+    if 'sem_estoque' in filters:
+        query = query.filter(Products.stock == 0)
     
     if 'categoria' in filters:
         query = query.filter(Products.category == filters['categoria'])
