@@ -36,13 +36,24 @@ CREATE TABLE `tables` (
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     waiter_id INT,
-    tabla_id INT,
-    products JSON NOT NULL,
+    table_id INT,
     total DECIMAL(10, 2) NOT NULL,
-    forma_de_pagamento VARCHAR(255) NOT NULL,
-    situação VARCHAR(255) NOT NULL,
+    payment_method VARCHAR(255) NOT NULL,
+    status VARCHAR(255) NOT NULL DEFAULT 'pending',
     finalized_at TIMESTAMP NULL DEFAULT NULL,
-    FOREIGN KEY (garçom_id) REFERENCES waiters(id),
-    FOREIGN KEY (mesa_id) REFERENCES mesas(id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (waiter_id) REFERENCES waiters(id),
+    FOREIGN KEY (table_id) REFERENCES tables(id)
 );
 
+-- Criar tabela de associação entre pedidos e produtos
+CREATE TABLE order_products (
+    order_id INT,
+    product_id INT,
+    quantity INT NOT NULL,
+    status VARCHAR(255) NOT NULL DEFAULT 'pending',
+    PRIMARY KEY (order_id, product_id),
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
