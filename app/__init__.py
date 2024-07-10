@@ -15,12 +15,15 @@ def create_app():
     CORS(app, resources={r'/*': {'origins': '*'}})
     db.init_app(app)
     jwt.init_app(app)
-    socketio.init_app(app)
+    socketio.init_app(app, cors_allowed_origins="*")
 
-    from .routes import auth, products, waiters, tables, orders
+    from .routes import auth, products, waiters, tables, orders, order_products
     app.register_blueprint(products.bp)
     app.register_blueprint(waiters.bp)
     app.register_blueprint(tables.bp)
     app.register_blueprint(auth.bp)
+    app.register_blueprint(orders.bp)
+    app.register_blueprint(order_products.bp)
+    
 
     return app

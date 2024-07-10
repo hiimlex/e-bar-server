@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required
 from .. import db
 from sqlalchemy import asc,desc
 
-bp = Blueprint('waiters', __name__, url_prefix='/garcons')
+bp = Blueprint('waiters', __name__, url_prefix='/waiters')
 
 @bp.route('', methods=['GET'])
 @jwt_required()
@@ -13,24 +13,24 @@ def get_waiters():
     filters = request.args
     query = Waiters.query
     
-    if 'ordem' in filters:
-        if 'direcao' in filters:
-            if filters['ordem'] == 'nome':
-                if(filters['direcao'] == 'desc'):
+    if 'sort_key' in filters:
+        if 'sort' in filters:
+            if filters['sort_key'] == 'name':
+                if(filters['sort'] == 'desc'):
                     query = query.order_by(desc(Waiters.name))
                 else:
                     query = query.order_by(asc(Waiters.name))
     else:
         query = query.order_by(asc(Waiters.name))
 
-    if 'nome' in filters:
-        query = query.filter(Waiters.name.ilike(f"%{filters['nome']}%"))
+    if 'name' in filters:
+        query = query.filter(Waiters.name.ilike(f"%{filters['name']}%"))
 
     if 'is_admin' in filters:
         query = query.filter(Waiters.is_admin == True)
 
-    if 'ativos' in filters:
-        query = query.filter(Waiters.active == True)
+    if 'is_active' in filters:
+        query = query.filter(Waiters.active == filters['is_active'])
 
     waiters = query.all()
 
@@ -48,7 +48,7 @@ def create_waiter():
         email=data['email'],
         phone=data.get('phone'),
         password=hash_password,
-        active=data.get('active', True),
+        is_active=data.get('active', True),
         is_admin=data.get('is_admin', False)
     )
     db.session.add(new_waiter)
@@ -63,7 +63,7 @@ def update_waiter(waiter_id):
     waiter.name = data.get('name', waiter.name)
     waiter.email = data.get('email', waiter.email)
     waiter.phone = data.get('phone', waiter.phone)
-    waiter.active = data.get('active', waiter.active)
+    waiter.is_active = data.get('active', waiter.is_active)
     waiter.is_admin = data.get('is_admin', waiter.is_admin)
     db.session.commit()
     return jsonify(waiter.as_dict())

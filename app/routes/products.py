@@ -4,7 +4,7 @@ from sqlalchemy import asc,desc
 from flask_jwt_extended import jwt_required
 from .. import db
 
-bp = Blueprint('products', __name__, url_prefix='/produtos')
+bp = Blueprint('products', __name__, url_prefix='/products')
 
 @bp.route('', methods=['GET'])
 @jwt_required()
@@ -20,6 +20,9 @@ def get_products():
     
     if 'nome' in filters:
         query = query.filter(Products.name.like(f"%{filters['nome']}%"))
+
+    if 'product_id' in filters:
+        query = query.filter(Products.id == filters['product_id'])
 
     if 'direcao' in filters:
         if 'ordem' in filters:
@@ -43,7 +46,6 @@ def get_products():
 
 
     products = query.all() 
-    print(products)
     return jsonify([product.as_dict() for product in products]) 
 
 @bp.route('', methods=['POST'])

@@ -6,3 +6,4 @@ Flask-SocketIO
 Flask-cors
 pymysql
 python-dotenv
+cryptography

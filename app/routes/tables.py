@@ -1,35 +1,55 @@
 from flask import Blueprint, request, jsonify
-from sqlalchemy import desc,asc
-from ..models import Tables
+from sqlalchemy import desc,asc, false, true
+from ..models import Tables, Waiters
 from flask_jwt_extended import jwt_required
+from sqlalchemy.sql.expression import false
 from .. import db
 
-bp = Blueprint('tables', __name__, url_prefix='/mesas')
+bp = Blueprint('tables', __name__, url_prefix='/tables')
 
 @bp.route('', methods=['GET'])
 @jwt_required()
 def get_tables():
     filters = request.args
-    query = Tables.query
+    query = db.session.query(
+        Tables,
+        Waiters.name.label('waiter_name')   
+    ).outerjoin(Waiters, Waiters.id == Tables.waiter_id
+    )
+
+    if 'in_use' in filters:
+        in_use_value = filters['in_use'].lower() == 'true'
+        query = query.filter(Tables.in_use == in_use_value)
     
-    if 'direcao' in filters:
-        if 'ordem' in filters:
-            if filters['ordem'].lower() == 'numero':
-                if filters['direcao'] == 'asc':
+    if 'is_active' in filters:
+        active_value = filters['is_active'].lower() == 'true'
+        query = query.filter(Tables.is_active == active_value)
+    
+    if 'sort_key' in filters:
+        if 'sort' in filters:
+            if filters['sort_key'].lower() == 'id':
+                if filters['sort'] == 'asc':
                     query = query.order_by(asc(Tables.id))
-                elif filters['direcao'] == 'desc':
+                elif filters['sort'] == 'desc':
                     query = query.order_by(desc(Tables.id))
                 
 
     tables = query.all()
-    return jsonify([table.as_dict() for table in tables])
+
+    tables_list = []
+    for table, waiter_name in tables:
+        table_dict = table.as_dict()
+        table_dict['waiter_name'] = waiter_name
+        tables_list.append(table_dict)
+
+    return jsonify(tables_list)
 
 @bp.route('', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def create_table():
     data = request.get_json()
     new_table = Tables(
-        active=data.get('active', True),
+        is_active=data.get('is_active', True),
         in_use=data.get('in_use', False),
         waiter_id=data.get('waiter_id'),
     )
